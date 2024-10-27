@@ -1,0 +1,56 @@
+---
+title: "Assignment_9"
+author: "Nwe Oo Mon (Nina)"
+date: "2024-10-27"
+output: html_document
+---
+
+## Retrieving Data from the New York Times Books API
+
+In this analysis, data was retrieved from the [New York Times Books API](https://developer.nytimes.com/docs/books-product/1/routes/lists/overview.json/get), which provides access to top 5 books for all the Best Sellers lists for specified date and related metadata. The API allows users to fetch information about books, lists, and rankings.
+
+```{r setup}
+# Load necessary libraries
+library(jsonlite)   # For JSON processing
+library("dplyr")
+library(knitr)
+
+# Load the JSON file
+books_json <- fromJSON("C:/Users/ninan/iCloudDrive/Study/CUNY/607 Data Acquisition and Management/w9/best_selling_books.json")
+
+# Extract the list ids from the results
+category_list <- books_json$results$lists
+
+# Selected list Data frame 
+selected_lists_df <- category_list %>%
+  select(list_id, list_name)
+
+kable((selected_lists_df), caption = "Books categories") 
+
+# Extract the books list from the results
+books_list <- books_json$results$lists$books
+
+# Accessing the first book data frame in the list
+books_df1 <- books_list[[1]]
+
+# Selected first book Data frame 
+selected_books_df1 <- books_df1 %>%
+  select(author, title)
+
+kable((selected_books_df1), caption = "5 best selling books for Combined Print and E-Book Fiction") # First data frame
+
+# Combining all data frames into one
+all_books_df <- bind_rows(books_list)
+
+# Selected combined Data frame 
+selected_all_books_df <- all_books_df %>%
+  select(author, title)
+
+# Display the combined data frame
+kable((selected_all_books_df), caption = "5 best selling books for different categories_2013-01-01")
+
+```
+
+
+
+
